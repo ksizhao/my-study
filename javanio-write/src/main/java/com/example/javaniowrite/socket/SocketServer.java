@@ -48,6 +48,7 @@ public class SocketServer {
 
                 };
                 executor.submit(runnable);
+                log.info("完成");
             }
         } catch (IOException e) {
             e.printStackTrace();
