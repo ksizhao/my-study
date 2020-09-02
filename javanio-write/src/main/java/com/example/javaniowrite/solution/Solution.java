@@ -2394,7 +2394,7 @@ public class Solution {
      * @param s
      * @return
      */
-    public  String longestPalindrome(String s) {
+    public String longestPalindrome(String s) {
         int len = s.length();
         if (len < 2) {
             return s;
@@ -2435,13 +2435,33 @@ public class Solution {
         return true;
     }
 
+    /**
+     * 乘积最大子数组
+     * @param nums
+     * @return
+     */
+    public int maxProduct(int[] nums) {
+        int max = Integer.MIN_VALUE, imax = 1, imin = 1;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] < 0) {
+                int temp = imax;
+                imax = imin;
+                imin = temp;
+            }
+            imax = Math.max(nums[i] * imax, nums[i]);
+            imin = Math.min(nums[i] * imin, nums[i]);
+            max = Math.max(max, imax);
+        }
+        return max;
+    }
+
 
     public static void main(String[] args) {
         //  String s = "a";
         int[] nums = {1, 1, 1, 2, 2, 3};
         List<Integer> stringList = topKFrequent(nums, 2);
         String s = "asbnb";
-       //  System.out.println(longestPalindrome(s));
+        //  System.out.println(longestPalindrome(s));
         // System.out.println(stringList.toString());
         //System.out.println(titleToNumber("B"));
 //        Arrays.sort(nums);
