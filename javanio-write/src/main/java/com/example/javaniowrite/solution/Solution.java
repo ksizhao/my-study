@@ -2437,6 +2437,7 @@ public class Solution {
 
     /**
      * 乘积最大子数组
+     *
      * @param nums
      * @return
      */
@@ -2453,6 +2454,27 @@ public class Solution {
             max = Math.max(max, imax);
         }
         return max;
+    }
+
+    /**
+     * 环形链表
+     *
+     * @param head
+     * @return
+     */
+    public boolean hasCycle(ListNode head) {
+
+        Set<ListNode> integerSet = new HashSet<>();
+        while (head != null) {
+            if (integerSet.contains(head)) {
+                return true;
+            }else {
+                integerSet.add(head);
+            }
+            head = head.next;
+        }
+        return false;
+
     }
 
 
