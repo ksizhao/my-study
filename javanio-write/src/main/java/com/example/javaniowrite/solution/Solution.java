@@ -2455,7 +2455,7 @@ public class Solution {
      * @param k
      * @return
      */
-    public  int[] topKFrequent(int[] nums, int k) {
+    public static int[] topKFrequent(int[] nums, int k) {
         if (nums.length == 0) {
             return null;
         }
@@ -2473,15 +2473,9 @@ public class Solution {
                 priorityQueue.poll();
             }
         }
-
-        List<Integer> integerList = new LinkedList<>();
-        while (!priorityQueue.isEmpty()) {
-            Integer integer = priorityQueue.poll();
-            integerList.add(integer);
-        }
-        int[] array = new int[integerList.size()];
-        for (int i = 0; i < integerList.size(); i++) {
-            array[i] = integerList.get(i);
+        int[] array = new int[k];
+        for (int i = 0; i <k ; i++) {
+            array[i] = priorityQueue.poll();
         }
         return array;
     }
@@ -2490,7 +2484,7 @@ public class Solution {
     public static void main(String[] args) {
         //  String s = "a";
         int[] nums = {1, 1, 1, 2, 2, 3};
-//        int [] arrays = topKFrequent(nums, 2);
+        int [] arrays = topKFrequent(nums, 2);
         String s = "asbnb";
         //  System.out.println(longestPalindrome(s));
         // System.out.println(stringList.toString());
