@@ -2290,34 +2290,6 @@ public class Solution {
 
     }
 
-    public static List<Integer> topKFrequent(int[] nums, int k) {
-        if (nums.length == 0) {
-            return null;
-        }
-        Map<Integer, Integer> countMap = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            countMap.put(nums[i], countMap.getOrDefault(nums[i], 0) + 1);
-        }
-        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return countMap.get(o1) - countMap.get(o2);
-            }
-        });
-        for (Integer n : countMap.keySet()) {
-            priorityQueue.add(n);
-            if (priorityQueue.size() > k) {
-                priorityQueue.poll();
-            }
-        }
-        List<Integer> integerList = new LinkedList<>();
-        while (!priorityQueue.isEmpty()) {
-            integerList.add(priorityQueue.poll());
-        }
-        Collections.reverse(integerList);
-        return integerList;
-
-    }
 
     Map<Integer, TreeNode> parent = new HashMap<Integer, TreeNode>();
     Set<Integer> visited = new HashSet<Integer>();
@@ -2468,7 +2440,7 @@ public class Solution {
         while (head != null) {
             if (integerSet.contains(head)) {
                 return true;
-            }else {
+            } else {
                 integerSet.add(head);
             }
             head = head.next;
@@ -2477,11 +2449,48 @@ public class Solution {
 
     }
 
+    /**
+     * 前K个高频元素
+     * @param nums
+     * @param k
+     * @return
+     */
+    public  int[] topKFrequent(int[] nums, int k) {
+        if (nums.length == 0) {
+            return null;
+        }
+        Map<Integer, Integer> hashMap = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            hashMap.put(nums[i], hashMap.getOrDefault(nums[i], 0) + 1);
+        }
+        // 从大到小排序的优先级队列
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<Integer>((n1, n2) -> hashMap.get(n1) - hashMap.get(n2));
+
+        for (int n : hashMap.keySet()) {
+
+            priorityQueue.add(n);
+            if (priorityQueue.size() > k) {
+                priorityQueue.poll();
+            }
+        }
+
+        List<Integer> integerList = new LinkedList<>();
+        while (!priorityQueue.isEmpty()) {
+            Integer integer = priorityQueue.poll();
+            integerList.add(integer);
+        }
+        int[] array = new int[integerList.size()];
+        for (int i = 0; i < integerList.size(); i++) {
+            array[i] = integerList.get(i);
+        }
+        return array;
+    }
+
 
     public static void main(String[] args) {
         //  String s = "a";
         int[] nums = {1, 1, 1, 2, 2, 3};
-        List<Integer> stringList = topKFrequent(nums, 2);
+//        int [] arrays = topKFrequent(nums, 2);
         String s = "asbnb";
         //  System.out.println(longestPalindrome(s));
         // System.out.println(stringList.toString());
