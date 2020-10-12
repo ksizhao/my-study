@@ -2461,8 +2461,8 @@ public class Solution {
             return null;
         }
         HashMap<Integer, Integer> integerMap = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            integerMap.put(nums[i], integerMap.getOrDefault(nums[i], 0) + 1);
+        for (int num : nums) {
+            integerMap.put(num, integerMap.getOrDefault(num, 0) + 1);
         }
         // 倒序排列的优先级队列
         PriorityQueue<Integer> priorityQueue = new PriorityQueue<Integer>(new Comparator<Integer>() {
