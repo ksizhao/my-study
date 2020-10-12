@@ -2464,6 +2464,7 @@ public class Solution {
         for (int i = 0; i < nums.length; i++) {
             integerMap.put(nums[i], integerMap.getOrDefault(nums[i], 0) + 1);
         }
+        // 倒序排列的优先级队列
         PriorityQueue<Integer> priorityQueue = new PriorityQueue<Integer>(new Comparator<Integer>() {
             @Override
             public int compare(Integer o1, Integer o2) {
