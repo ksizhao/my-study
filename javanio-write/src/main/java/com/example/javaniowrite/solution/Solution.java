@@ -2451,6 +2451,7 @@ public class Solution {
 
     /**
      * 前K个高频元素
+     *
      * @param nums
      * @param k
      * @return
@@ -2459,32 +2460,35 @@ public class Solution {
         if (nums.length == 0) {
             return null;
         }
-        Map<Integer, Integer> hashMap = new HashMap<>();
+        HashMap<Integer, Integer> integerMap = new HashMap<>();
         for (int i = 0; i < nums.length; i++) {
-            hashMap.put(nums[i], hashMap.getOrDefault(nums[i], 0) + 1);
+            integerMap.put(nums[i], integerMap.getOrDefault(nums[i], 0) + 1);
         }
-        // 从大到小排序的优先级队列
-        PriorityQueue<Integer> priorityQueue = new PriorityQueue<Integer>((n1, n2) -> hashMap.get(n1) - hashMap.get(n2));
-
-        for (int n : hashMap.keySet()) {
-
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<Integer>(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return integerMap.get(o1) - integerMap.get(o2);
+            }
+        });
+        for (int n : integerMap.keySet()) {
             priorityQueue.add(n);
             if (priorityQueue.size() > k) {
                 priorityQueue.poll();
             }
         }
-        int[] array = new int[k];
-        for (int i = 0; i <k ; i++) {
-            array[i] = priorityQueue.poll();
+
+        int[] intArray = new int[k];
+        for (int i = 0; i < k; i++) {
+            intArray[i] = priorityQueue.poll();
         }
-        return array;
+        return intArray;
     }
 
 
     public static void main(String[] args) {
         //  String s = "a";
         int[] nums = {1, 1, 1, 2, 2, 3};
-        int [] arrays = topKFrequent(nums, 2);
+        int[] arrays = topKFrequent(nums, 2);
         String s = "asbnb";
         //  System.out.println(longestPalindrome(s));
         // System.out.println(stringList.toString());
