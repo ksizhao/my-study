@@ -2546,6 +2546,7 @@ public class Solution {
     public Solution(int[] nums) {
         array = nums;
         original = nums.clone();
+
     }
 
     /**
