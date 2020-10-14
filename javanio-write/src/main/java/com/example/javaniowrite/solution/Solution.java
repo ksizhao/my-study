@@ -33,6 +33,29 @@ public class Solution {
         }
     }
 
+    class Node {
+        public int val;
+        public Node left;
+        public Node right;
+        public Node next;
+
+        public Node() {
+        }
+
+        public Node(int _val) {
+            val = _val;
+        }
+
+        public Node(int _val, Node _left, Node _right, Node _next) {
+            val = _val;
+            left = _left;
+            right = _right;
+            next = _next;
+        }
+    }
+
+    ;
+
 
     public class ListNode {
         int val;
@@ -2539,6 +2562,10 @@ public class Solution {
         return res;
     }
 
+
+    /**
+     * 打乱数组
+     */
     private int[] array;
     private int[] original;
     Random random = new Random();
@@ -2546,7 +2573,6 @@ public class Solution {
     public Solution(int[] nums) {
         array = nums;
         original = nums.clone();
-
     }
 
     /**
@@ -2556,7 +2582,6 @@ public class Solution {
         array = original;
         original = original.clone();
         return array;
-
     }
 
     /**
@@ -2564,19 +2589,48 @@ public class Solution {
      */
     public int[] shuffle() {
         for (int i = 0; i < array.length; i++) {
-            exchange(i, intRange(array.length,i));
+            compareChange(i, randomInt(array.length, i));
         }
         return array;
     }
 
-    private void exchange(int i, int j) {
+    private void compareChange(int i, int j) {
         int temp = array[i];
-        array[j] = array[i];
-        array[i] = temp;
+        array[i] = array[j];
+        array[j] = temp;
     }
 
-    private int intRange(int max, int min) {
+    private int randomInt(int max, int min) {
         return random.nextInt(max - min) + min;
+    }
+
+    /**
+     * 填充每个节点的下一个右侧节点指针 层序遍历
+     * @param root
+     * @return
+     */
+    public Node connect(Node root) {
+        if (root == null) {
+            return root;
+        }
+        Node leftMost = root;
+        while (leftMost.left != null) {
+            Node head = leftMost;
+            while (head != null) {
+                // 第一种情况
+                head.left.next = head.right;
+                if (head.next != null) {
+                    // 第二种情况
+                    head.right.next = head.next.left;
+                }
+                // 遍历直到没有节点
+                head = head.next;
+            }
+            // 换到下一层左节点
+            leftMost = leftMost.left;
+        }
+        return root;
+
     }
 
 
