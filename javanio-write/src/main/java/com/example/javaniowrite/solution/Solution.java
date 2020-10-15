@@ -2606,30 +2606,59 @@ public class Solution {
 
     /**
      * 填充每个节点的下一个右侧节点指针 层序遍历
+     *
      * @param root
      * @return
      */
     public Node connect(Node root) {
+
         if (root == null) {
             return root;
         }
-        Node leftMost = root;
-        while (leftMost.left != null) {
-            Node head = leftMost;
+        Node listMost = root;
+        while (listMost.left != null) {
+            Node head = listMost;
             while (head != null) {
-                // 第一种情况
                 head.left.next = head.right;
                 if (head.next != null) {
-                    // 第二种情况
                     head.right.next = head.next.left;
                 }
                 // 遍历直到没有节点
                 head = head.next;
             }
-            // 换到下一层左节点
-            leftMost = leftMost.left;
+            listMost = listMost.left;
         }
         return root;
+
+    }
+
+    /**
+     * 生成括号 ， 回溯法
+     * @param n
+     * @return
+     */
+    public List<String> generateParenthesis(int n) {
+        List<String> ans = new ArrayList<>();
+        backtrack(ans, new StringBuilder(), 0, 0, n);
+        return ans;
+    }
+
+    public void backtrack(List<String> ans, StringBuilder cur, int open, int close, int max) {
+
+        if (cur.length() == max * 2) {
+            ans.add(cur.toString());
+            return;
+        }
+        if (open < max) {
+            cur.append("(");
+            backtrack(ans, cur, open + 1, close, max);
+            cur.deleteCharAt(cur.length() - 1);
+        }
+        if (close < open) {
+            cur.append(")");
+            backtrack(ans, cur, open, close + 1, max);
+            cur.deleteCharAt(cur.length() - 1);
+        }
 
     }
 
