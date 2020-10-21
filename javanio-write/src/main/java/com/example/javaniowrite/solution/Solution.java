@@ -2634,31 +2634,119 @@ public class Solution {
 
     /**
      * 生成括号 ， 回溯法
+     *
      * @param n
      * @return
      */
-    public List<String> generateParenthesis(int n) {
-        List<String> ans = new ArrayList<>();
-        backtrack(ans, new StringBuilder(), 0, 0, n);
-        return ans;
+    public static List<String> generateParenthesis(int n) {
+        List<String> stringList = new LinkedList<>();
+        backtrack(stringList, new StringBuilder(), 0, 0, n);
+        return stringList;
     }
 
-    public void backtrack(List<String> ans, StringBuilder cur, int open, int close, int max) {
+    public static void backtrack(List<String> ans, StringBuilder sb, int open, int close, int max) {
 
-        if (cur.length() == max * 2) {
-            ans.add(cur.toString());
+        if (sb.length() == 2 * max) {
+            ans.add(sb.toString());
             return;
         }
         if (open < max) {
-            cur.append("(");
-            backtrack(ans, cur, open + 1, close, max);
-            cur.deleteCharAt(cur.length() - 1);
+            sb.append("(");
+            backtrack(ans, sb, open + 1, close, max);
+            sb.deleteCharAt(sb.length() - 1);
         }
         if (close < open) {
-            cur.append(")");
-            backtrack(ans, cur, open, close + 1, max);
-            cur.deleteCharAt(cur.length() - 1);
+            sb.append(")");
+            backtrack(ans, sb, open, close + 1, max);
+            sb.deleteCharAt(sb.length() - 1);
         }
+    }
+
+    /**
+     * 阶乘的0
+     *
+     * @param n
+     * @return
+     */
+    public static int trailingZeroes(int n) {
+
+        int zeroCount = 0;
+        for (int i = 5; i <= n; i += 5) {
+            int powerOf5 = 5;
+            while (i % powerOf5 == 0) {
+                zeroCount += 1;
+                powerOf5 *= 5;
+            }
+        }
+        return zeroCount;
+    }
+
+    /**
+     * 逆波兰表达式
+     *
+     * @param tokens
+     * @return
+     */
+    public static int evalRPN(String[] tokens) {
+
+        Stack<Integer> integerStack = new Stack<>();
+        Integer operation1, operation2;
+        for (String str : tokens) {
+            switch (str) {
+                case "+":
+                    operation1 = integerStack.pop();
+                    operation2 = integerStack.pop();
+                    integerStack.push(operation1 + operation2);
+                    break;
+                case "-":
+                    operation1 = integerStack.pop();
+                    operation2 = integerStack.pop();
+                    integerStack.push(operation2 + operation1);
+                    break;
+                case "*":
+                    operation1 = integerStack.pop();
+                    operation2 = integerStack.pop();
+                    integerStack.push(operation1 * operation2);
+                    break;
+                case "/":
+                    operation1 = integerStack.pop();
+                    operation2 = integerStack.pop();
+                    integerStack.push(operation2 / operation1);
+                    break;
+                default:
+                    integerStack.push(Integer.parseInt(str));
+                    break;
+            }
+        }
+        return integerStack.get(0);
+
+    }
+
+    /**
+     * 外观数列
+     *
+     * @param n
+     * @return
+     */
+    public static String countAndSay(int n) {
+        if (n == 1) {
+            return "1";
+        }
+        StringBuilder sb = new StringBuilder();
+        // 获取上一层的字符串
+        String str = countAndSay(n - 1);
+        int length = str.length();
+        int start = 0;
+        for (int i = 1; i < length + 1; i++) {
+            // 字符串最后一位直接拼接
+            if (i == length) {
+                sb.append(i - start).append(str.charAt(start));
+            } else if (str.charAt(i) != str.charAt(start)) {
+                sb.append(i - start).append(str.charAt(start));
+                start = i;
+            }
+        }
+        return sb.toString();
 
     }
 
@@ -2666,8 +2754,9 @@ public class Solution {
     public static void main(String[] args) {
         //  String s = "a";
         int[] nums = {1, 1, 1, 2, 2, 3};
-        int[] arrays = topKFrequent(nums, 2);
+//        int[] arrays = topKFrequent(nums, 2);
         String s = "asbnb";
+        System.out.println(countAndSay(30));
         //  System.out.println(longestPalindrome(s));
         // System.out.println(stringList.toString());
         //System.out.println(titleToNumber("B"));
