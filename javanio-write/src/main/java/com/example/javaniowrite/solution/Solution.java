@@ -2723,7 +2723,7 @@ public class Solution {
     }
 
     /**
-     * 外观数列
+     * 外观数列, 双指针，递归
      *
      * @param n
      * @return
@@ -2733,12 +2733,10 @@ public class Solution {
             return "1";
         }
         StringBuilder sb = new StringBuilder();
-        // 获取上一层的字符串
         String str = countAndSay(n - 1);
         int length = str.length();
         int start = 0;
         for (int i = 1; i < length + 1; i++) {
-            // 字符串最后一位直接拼接
             if (i == length) {
                 sb.append(i - start).append(str.charAt(start));
             } else if (str.charAt(i) != str.charAt(start)) {
@@ -2750,13 +2748,37 @@ public class Solution {
 
     }
 
+    /**
+     * 寻找峰值，二分查找，迭代
+     *
+     * @param nums
+     * @return
+     */
+    public static int findPeakElement(int[] nums) {
+
+        int left = 0, right = nums.length - 1;
+        while (left < right) {
+            int mid = (right + left) / 2;
+            if (nums[mid] < nums[mid + 1]) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return left;
+
+    }
+
 
     public static void main(String[] args) {
         //  String s = "a";
-        int[] nums = {1, 1, 1, 2, 2, 3};
+        int[] nums = {1, 2, 3, 1};
 //        int[] arrays = topKFrequent(nums, 2);
         String s = "asbnb";
-        System.out.println(countAndSay(30));
+        long start = System.currentTimeMillis();
+        System.out.println(findPeakElement(nums));
+        long end = System.currentTimeMillis();
+        System.out.println("耗时" + (end - start));
         //  System.out.println(longestPalindrome(s));
         // System.out.println(stringList.toString());
         //System.out.println(titleToNumber("B"));
