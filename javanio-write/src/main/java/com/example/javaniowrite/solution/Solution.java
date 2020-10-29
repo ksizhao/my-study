@@ -2770,6 +2770,118 @@ public class Solution {
     }
 
 
+    /**
+     * 二叉树的锯齿形层次遍历
+     *
+     * @param root
+     * @return
+     */
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+
+        if (root == null) {
+            return new LinkedList<>(new ArrayList<>());
+        }
+        LinkedList<TreeNode> treeNodeQueue = new LinkedList<TreeNode>();
+        treeNodeQueue.add(root);
+        treeNodeQueue.add(null);
+        List<List<Integer>> lists = new LinkedList<>();
+        LinkedList<Integer> levelList = new LinkedList<>();
+        boolean isListLeft = true;
+        while (treeNodeQueue.size() > 0) {
+            TreeNode node = treeNodeQueue.pollFirst();
+            if (node != null) {
+                if (isListLeft) {
+                    levelList.addLast(node.val);
+                } else {
+                    levelList.addFirst(node.val);
+                }
+                if (node.left != null) {
+                    treeNodeQueue.add(node.left);
+                }
+                if (node.right != null) {
+                    treeNodeQueue.add(node.right);
+                }
+            } else {
+                lists.add(levelList);
+                levelList = new LinkedList<>();
+                if (treeNodeQueue.size() > 0) {
+                    treeNodeQueue.add(null);
+                    isListLeft = !isListLeft;
+                }
+            }
+        }
+        return lists;
+    }
+
+    /**
+     * 有效的数独
+     *
+     * @param board
+     * @return
+     */
+    public boolean isValidSudoku(char[][] board) {
+
+        HashMap<Integer, Integer>[] rows = new HashMap[9];
+        HashMap<Integer, Integer>[] columns = new HashMap[9];
+        HashMap<Integer, Integer>[] boxIndexs = new HashMap[9];
+        for (int i = 0; i < 9; i++) {
+            rows[i] = new HashMap<>();
+            columns[i] = new HashMap<>();
+            boxIndexs[i] = new HashMap<>();
+        }
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                char num = board[i][j];
+                if (num != '.') {
+                    int boxIndex = (i / 3) * 3 + j / 3;
+                    rows[i].put((int) num, rows[i].getOrDefault((int) num, 0) + 1);
+                    columns[j].put((int) num, columns[j].getOrDefault((int) num, 0) + 1);
+                    boxIndexs[boxIndex].put((int) num, boxIndexs[boxIndex].getOrDefault((int) num, 0) + 1);
+                    if (rows[i].get((int) num) > 1 || columns[j].get((int) num) > 1 || boxIndexs[boxIndex].get((int) num) > 1) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 矩阵置0
+     *
+     * @param matrix
+     */
+    public void setZeroes(int[][] matrix) {
+        int columnLength = matrix[0].length, rowLength = matrix.length;
+        int MODIFIED = 1000000;
+        for (int i = 0; i < rowLength; i++) {
+            for (int j = 0; j < columnLength; j++) {
+                int value = matrix[i][j];
+                if (value == 0) {
+                    // 更新行
+                    for (int k = 0; k < rowLength; k++) {
+                        if (matrix[k][j] != 0) {
+                            matrix[k][j] = MODIFIED;
+                        }
+                    }
+                    // 更新列
+                    for (int k = 0; k < columnLength; k++) {
+                        if (matrix[i][k] != 0) {
+                            matrix[i][k] = MODIFIED;
+                        }
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < rowLength; i++) {
+            for (int j = 0; j < columnLength; j++) {
+                if (matrix[i][j] == MODIFIED) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
         //  String s = "a";
         int[] nums = {1, 2, 3, 1};
