@@ -1,6 +1,7 @@
 package com.example.javaniowrite.solution;
 
 
+import javafx.util.Pair;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -2852,35 +2853,180 @@ public class Solution {
      * @param matrix
      */
     public void setZeroes(int[][] matrix) {
-        int columnLength = matrix[0].length, rowLength = matrix.length;
-        int MODIFIED = 1000000;
-        for (int i = 0; i < rowLength; i++) {
-            for (int j = 0; j < columnLength; j++) {
+        int rLength = matrix.length, cLength = matrix[0].length;
+        int tempValue = 1000000;
+        for (int i = 0; i < rLength; i++) {
+            for (int j = 0; j < cLength; j++) {
                 int value = matrix[i][j];
                 if (value == 0) {
-                    // 更新行
-                    for (int k = 0; k < rowLength; k++) {
+                    for (int k = 0; k < rLength; k++) {
+                        // 更新行
                         if (matrix[k][j] != 0) {
-                            matrix[k][j] = MODIFIED;
+                            matrix[k][j] = tempValue;
                         }
                     }
                     // 更新列
-                    for (int k = 0; k < columnLength; k++) {
+                    for (int k = 0; k < cLength; k++) {
                         if (matrix[i][k] != 0) {
-                            matrix[i][k] = MODIFIED;
+                            matrix[i][k] = tempValue;
                         }
                     }
                 }
             }
         }
-        for (int i = 0; i < rowLength; i++) {
-            for (int j = 0; j < columnLength; j++) {
-                if (matrix[i][j] == MODIFIED) {
+        for (int i = 0; i < rLength; i++) {
+            for (int j = 0; j < cLength; j++) {
+                if (matrix[i][j] == tempValue) {
                     matrix[i][j] = 0;
                 }
             }
         }
     }
+
+
+    /**
+     * 遍历整个矩阵，如果 cell[i][j] == 0 就将第 i 行和第 j 列的第一个元素标记。
+     * 第一行和第一列的标记是相同的，都是 cell[0][0]，所以需要一个额外的变量告知第一列是否被标记，同时用 cell[0][0] 继续表示第一行的标记。
+     * 然后，从第二行第二列的元素开始遍历，如果第 r 行或者第 c 列被标记了，那么就将 cell[r][c] 设为 0。这里第一行和第一列的作用就相当于方法一中的 row_set 和 column_set 。
+     * 然后我们检查是否 cell[0][0] == 0 ，如果是则赋值第一行的元素为零。
+     * 然后检查第一列是否被标记，如果是则赋值第一列的元素为零。
+     *
+     * @param matrix
+     */
+    public void setZeroes1(int[][] matrix) {
+        int rLength = matrix.length, cLength = matrix[0].length;
+        boolean isCol = false;
+        for (int i = 0; i < rLength; i++) {
+            if (matrix[i][0] == 0) {
+                isCol = true;
+            }
+            for (int j = 1; j < cLength; j++) {
+                if (matrix[i][j] == 0) {
+                    matrix[i][0] = 0;
+                    matrix[0][j] = 0;
+                }
+            }
+        }
+        for (int i = 1; i < rLength; i++) {
+            for (int j = 1; j < cLength; j++) {
+                if (matrix[i][0] == 0 || matrix[0][j] == 0) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+        if (matrix[0][0] == 0) {
+            for (int i = 0; i < cLength; i++) {
+                matrix[0][i] = 0;
+            }
+        }
+        if (isCol) {
+            for (int i = 0; i < rLength; i++) {
+                matrix[i][0] = 0;
+            }
+        }
+    }
+
+    /**
+     * 单词接龙
+     * 对给定的 wordList 做预处理，找出所有的通用状态。将通用状态记录在字典中，键是通用状态，值是所有具有通用状态的单词。
+     * 将包含 beginWord 和 1 的元组放入队列中，1 代表节点的层次。我们需要返回 endWord 的层次也就是从 beginWord 出发的最短距离。
+     * 为了防止出现环，使用访问数组记录。
+     * 当队列中有元素的时候，取出第一个元素，记为 current_word。
+     * 找到 current_word 的所有通用状态，并检查这些通用状态是否存在其它单词的映射，这一步通过检查 all_combo_dict 来实现。
+     * 从 all_combo_dict 获得的所有单词，都和 current_word 共有一个通用状态，所以都和 current_word 相连，因此将他们加入到队列中。
+     * 对于新获得的所有单词，向队列中加入元素 (word, level + 1) 其中 level 是 current_word 的层次。
+     * 最终当到达期望的单词，对应的层次就是最短变换序列的长度
+     *
+     * @param beginWord
+     * @param endWord
+     * @param wordList
+     * @return
+     */
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+
+        if (!wordList.contains(endWord)) {
+            return 0;
+        }
+        int length = beginWord.length();
+        Map<String, List<String>> stringListMap = new HashMap<>();
+        wordList.forEach(word -> {
+            for (int i = 0; i < length; i++) {
+                String newWord = word.substring(0, i) + "*" + word.substring(i + 1, length);
+                List<String> stringList = stringListMap.getOrDefault(newWord, new ArrayList<>());
+                stringList.add(word);
+                stringListMap.put(newWord, stringList);
+            }
+        });
+        Queue<Pair<String, Integer>> queue = new LinkedList<>();
+        queue.add(new Pair<>(beginWord, 1));
+        // 记录该单词是否被访问过
+        Set<String> visitedSet = new HashSet<>();
+        while (!queue.isEmpty()) {
+            Pair<String, Integer> node = queue.remove();
+            String currWord = node.getKey();
+            int level = node.getValue();
+            for (int i = 0; i < length; i++) {
+                String newWord = currWord.substring(0, i) + "*" + currWord.substring(i + 1, length);
+                for (String word : stringListMap.getOrDefault(newWord, new ArrayList<>())) {
+                    if (word.equals(endWord)) {
+                        return level + 1;
+                    }
+                    if (!visitedSet.contains(word)) {
+                        visitedSet.add(word);
+                        queue.add(new Pair<>(word, level + 1));
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+
+    public double quickMul(double x, long n) {
+
+        if (n == 0) {
+            return 1.0;
+        }
+        double y = quickMul(x, n / 2);
+        return n % 2 == 0 ? y * y : y * y * x;
+    }
+
+    /**
+     * Pow(x, n)
+     * 计算x的n次幂时，递归计算x的n/2次幂，结果向下取整，假设计算结果为y,当n为偶数时，x的n次幂等于y*y，反之，x的n次幂等于y*y*x;
+     * @param x
+     * @param n
+     * @return
+     */
+    public double myPow(double x, int n) {
+        return n > 0 ? quickMul(x, n) : 1.0 / quickMul(x, -n);
+    }
+
+
+
+    /**
+     * 快速幂+迭代
+     *
+     * @param x
+     * @param n
+     * @return
+     */
+    private double quickMul(double x, int n) {
+        double ans = 1.00;
+        // 贡献的初始值为 x
+        double xContri = x;
+        while (n > 0) {
+            if (n % 2 == 1) {
+                // 如果 N 二进制表示的最低位为 1，那么需要计入贡献
+                ans *= xContri;
+            }
+            // 将贡献不断地平方
+            xContri *= xContri;
+            // 舍弃 N 二进制表示的最低位，这样我们每次只要判断最低位即可
+            n /= 2;
+        }
+        return ans;
+    }
+
 
     public static void main(String[] args) {
         //  String s = "a";
