@@ -2993,6 +2993,7 @@ public class Solution {
     /**
      * Pow(x, n)
      * 计算x的n次幂时，递归计算x的n/2次幂，结果向下取整，假设计算结果为y,当n为偶数时，x的n次幂等于y*y，反之，x的n次幂等于y*y*x;
+     *
      * @param x
      * @param n
      * @return
@@ -3000,7 +3001,6 @@ public class Solution {
     public double myPow(double x, int n) {
         return n > 0 ? quickMul(x, n) : 1.0 / quickMul(x, -n);
     }
-
 
 
     /**
@@ -3027,16 +3027,41 @@ public class Solution {
         return ans;
     }
 
+    /**
+     * 使用排序合并区间
+     *
+     * @param intervals
+     * @return
+     */
+    public int[][] merge(int[][] intervals) {
+
+        // 升序排序
+        Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+        List<int[]> merged = new LinkedList<>();
+        for (int i = 0; i < intervals.length; i++) {
+            int left = intervals[i][0], right = intervals[i][1];
+            // 所有能够合并的区间都必然是连续的 a[i].end<a[j].start≤a[j].end<a[k].start,
+            if (merged.size() == 0 || left > merged.get(merged.size() - 1)[1]) {
+                merged.add(new int[]{left, right});
+            } else {
+                // 右区间，替换为较大值
+                merged.get(merged.size() - 1)[1] = (Math.max(right, merged.get(merged.size() - 1)[1]));
+            }
+        }
+        return merged.toArray(new int[merged.size()][]);
+
+    }
+
 
     public static void main(String[] args) {
         //  String s = "a";
         int[] nums = {1, 2, 3, 1};
 //        int[] arrays = topKFrequent(nums, 2);
-        String s = "asbnb";
-        long start = System.currentTimeMillis();
-        System.out.println(findPeakElement(nums));
-        long end = System.currentTimeMillis();
-        System.out.println("耗时" + (end - start));
+//        String s = "asbnb";
+//        long start = System.currentTimeMillis();
+//        System.out.println(findPeakElement(nums));
+//        long end = System.currentTimeMillis();
+//        System.out.println("耗时" + (end - start));
         //  System.out.println(longestPalindrome(s));
         // System.out.println(stringList.toString());
         //System.out.println(titleToNumber("B"));
