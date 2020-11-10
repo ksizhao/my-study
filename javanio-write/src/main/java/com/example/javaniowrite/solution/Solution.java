@@ -3052,6 +3052,101 @@ public class Solution {
 
     }
 
+    class LRUCache {
+
+        private HashMap<Integer, DbLinkedNode> hashMap = new HashMap<>();
+        int size;
+        int capacity;
+        private DbLinkedNode head, tail;
+
+        class DbLinkedNode {
+            int value;
+            int key;
+            DbLinkedNode pre;
+            DbLinkedNode next;
+
+            public DbLinkedNode() {
+
+            }
+
+            public DbLinkedNode(int value, int key) {
+                this.value = value;
+                this.key = key;
+            }
+        }
+
+        public LRUCache(int capacity) {
+            this.size = 0;
+            this.capacity = capacity;
+            head = new DbLinkedNode();
+            tail = new DbLinkedNode();
+            head.next = tail;
+            tail.pre = head;
+        }
+
+        public int get(int key) {
+            DbLinkedNode node = hashMap.get(key);
+            if (node == null) {
+                return -1;
+            }
+            // 如果 key 存在，先通过哈希表定位，再移到头部
+            moveToHead(node);
+            return node.value;
+        }
+
+        /**
+         * 重点
+         * @param key
+         * @param value
+         */
+        public void put(int key, int value) {
+            DbLinkedNode node = hashMap.get(key);
+            if (node == null) {
+                DbLinkedNode newNode = new DbLinkedNode(key, value);
+                addtoHead(newNode);
+                hashMap.put(key, newNode);
+                size++;
+                if (size > capacity) {
+                    DbLinkedNode tail = removeTail();
+                    hashMap.remove(tail.key);
+                    size--;
+                }
+            } else {
+                // 如果 key 存在，先通过哈希表定位，再修改 value，并移到头部
+                node.value = value;
+                moveToHead(node);
+            }
+        }
+
+        /**
+         * 重点
+         * @param node
+         */
+        private void addtoHead(DbLinkedNode node) {
+            node.pre = head;
+            node.next = head.next;
+            head.next.pre = node;
+            head.next = node;
+        }
+
+        private void removeNode(DbLinkedNode node) {
+            node.pre.next = node.next;
+            node.next.pre = node.pre;
+        }
+
+        private void moveToHead(DbLinkedNode node) {
+            removeNode(node);
+            addtoHead(node);
+        }
+
+        private DbLinkedNode removeTail() {
+            DbLinkedNode res = tail.pre;
+            removeNode(res);
+            return res;
+        }
+
+    }
+
 
     public static void main(String[] args) {
         //  String s = "a";
