@@ -2,6 +2,9 @@ package com.example.javaniowrite.thread;
 
 import sun.nio.ch.DirectBuffer;
 
+import javax.annotation.PostConstruct;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -13,6 +16,39 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ThreadTest {
 
     private static AtomicInteger count=new AtomicInteger(0);
+
+    private final ExecutorService executorService;
+
+
+    public ThreadTest(ExecutorService executorService) {
+        this.executorService = executorService;
+    }
+
+    @PostConstruct
+    public void init(){
+        List<String> strings=new LinkedList<>();
+        for (int j = 0; j < 10000; j++) {
+            strings.add("test"+i);
+        }
+        CompletionService<String> completionServic=new ExecutorCompletionService<String>(executorService);
+        for (String str:strings) {
+            completionServic.submit(new Callable<String>() {
+                @Override
+                public String call() throws Exception {
+                    return str+str;
+                }
+            });
+        }
+
+        for (int j = 0; j < strings.size(); j++) {
+            try {
+                Future<String> future=completionServic.take();
+                System.out.println(future.get());
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     private volatile static int i=0;
 
@@ -41,7 +77,7 @@ public class ThreadTest {
         for (int i=0;i<100;i++) {
 
 
-            Runnable thread=new Thtrads();
+            Runnable thread=new Threads();
            // executorService.schedule(thread,10,TimeUnit.SECONDS);
             // 每5秒执行一次
            // executorService.scheduleAtFixedRate(thread,5,10,TimeUnit.SECONDS);
@@ -68,8 +104,19 @@ public class ThreadTest {
 
     }
 
+    private class QueueingFuture<V> extends FutureTask{
 
-    static  class Thtrads implements Runnable{
+        public QueueingFuture(Callable<V> callable) {
+            super(callable);
+        }
+
+        public QueueingFuture(Runnable runnable, Object result) {
+            super(runnable, result);
+        }
+    }
+
+
+    static  class Threads implements Runnable{
 
         @Override
         public void run() {

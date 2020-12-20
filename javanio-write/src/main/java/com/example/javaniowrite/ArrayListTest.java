@@ -33,29 +33,32 @@ public class ArrayListTest {
 //        System.out.println("自然升序排序后数组"+arrayList);
 //        Collections.reverse(arrayList);
 //        System.out.println("反转后数组"+arrayList);
-//        Collections.sort(arrayList, new Comparator<Integer>() {
+//        arrayList.sort(new Comparator<Integer>() {
 //            @Override
 //            public int compare(Integer o1, Integer o2) {
 //                return o2.compareTo(o1);
 //            }
 //        });
 //        System.out.println("定制降序排序后数组"+arrayList);
-
-        Map<String,String> map=new HashMap<>();
-        map.put("one","wang");
-        List<String> stringList=new LinkedList<>();
-        stringList.add("zlc");
-        Iterator<String> stringIterator=stringList.iterator();
-        while (stringIterator.hasNext()) {
-            String s=stringIterator.next();
-            System.out.println(s);
-        }
-        Set<Map.Entry<String, String>> entries=map.entrySet();
-        for (Map.Entry entry:entries) {
-            System.out.println("键:"+entry.getKey()+"值"+entry.getValue());
-        }
+        ThreadLocal<String> threadLocal=new ThreadLocal<>();
+        threadLocal.set("A");
+        String s=threadLocal.get();
+        System.out.println(s);
+//        Map<String, String> map = new HashMap<>();
+//        map.put("one", "wang");
+//        List<String> stringList = new LinkedList<>();
+//        stringList.add("zlc");
+//        Iterator<String> stringIterator = stringList.iterator();
+//        while (stringIterator.hasNext()) {
+//            String s = stringIterator.next();
+//            System.out.println(s);
+//        }
+//        Set<Map.Entry<String, String>> entries = map.entrySet();
+//        for (Map.Entry entry : entries) {
+//            System.out.println("键:" + entry.getKey() + "值" + entry.getValue());
+//        }
 
     }
 
-    
+
 }
