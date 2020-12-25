@@ -3096,6 +3096,7 @@ public class Solution {
 
         /**
          * 重点
+         *
          * @param key
          * @param value
          */
@@ -3120,6 +3121,7 @@ public class Solution {
 
         /**
          * 重点
+         *
          * @param node
          */
         private void addtoHead(DbLinkedNode node) {
@@ -3144,6 +3146,31 @@ public class Solution {
             removeNode(res);
             return res;
         }
+
+    }
+
+
+    /**
+     * 贪心算法 跳跃游戏
+     * @param nums
+     * @return
+     */
+    public boolean canJump(int[] nums) {
+
+        int length = nums.length;
+        int steps = 0;
+        for (int i = 0; i < length; i++) {
+            // 可达
+            if (i <= steps) {
+                // 更新为最远可达的位置
+                steps = Math.max(steps, i + nums[i]);
+            }
+            if (steps >= length - 1) {
+                return true;
+            }
+        }
+        return false;
+
 
     }
 
