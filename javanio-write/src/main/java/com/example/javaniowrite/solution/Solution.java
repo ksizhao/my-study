@@ -178,6 +178,12 @@ public class Solution {
 
     }
 
+    public static void main(String[] args) {
+        String str = "hello world";
+        System.out.println(reverseStr(str));
+    }
+
+
     /**
      * 两数相加
      *
@@ -254,7 +260,6 @@ public class Solution {
     public static List<String> letterCombinations(String digits) {
         if (digits.length() != 0) {
             backtrack("", digits);
-
         }
         return output;
 
@@ -297,21 +302,22 @@ public class Solution {
      */
     public TreeNode invertTree(TreeNode root) {
 
+
         if (root == null) {
             return null;
         }
-        Queue<TreeNode> nodeQueue = new LinkedList<>();
-        nodeQueue.add(root);
-        while (!nodeQueue.isEmpty()) {
-            TreeNode current = nodeQueue.poll();
-            TreeNode tmp = current.left;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            TreeNode current = queue.poll();
+            TreeNode temp = current.left;
             current.left = current.right;
-            current.right = tmp;
+            current.right = temp;
             if (current.left != null) {
-                nodeQueue.add(current.left);
+                queue.add(current.left);
             }
             if (current.right != null) {
-                nodeQueue.add(current.right);
+                queue.add(current.right);
             }
         }
         return root;
@@ -3152,6 +3158,7 @@ public class Solution {
 
     /**
      * 贪心算法 跳跃游戏
+     *
      * @param nums
      * @return
      */
@@ -3160,9 +3167,7 @@ public class Solution {
         int length = nums.length;
         int steps = 0;
         for (int i = 0; i < length; i++) {
-            // 可达
             if (i <= steps) {
-                // 更新为最远可达的位置
                 steps = Math.max(steps, i + nums[i]);
             }
             if (steps >= length - 1) {
@@ -3170,84 +3175,115 @@ public class Solution {
             }
         }
         return false;
-
-
     }
 
 
-    public static void main(String[] args) {
-        //  String s = "a";
-        int[] nums = {1, 2, 3, 1};
-//        int[] arrays = topKFrequent(nums, 2);
-//        String s = "asbnb";
-//        long start = System.currentTimeMillis();
-//        System.out.println(findPeakElement(nums));
-//        long end = System.currentTimeMillis();
-//        System.out.println("耗时" + (end - start));
-        //  System.out.println(longestPalindrome(s));
-        // System.out.println(stringList.toString());
-        //System.out.println(titleToNumber("B"));
-//        Arrays.sort(nums);
-//        System.out.println(nums);
-        //  String s = "anagram";
-        // String t = "nagaram";
-        // bubbleSort(nums);
-//        quickSort(nums, 0, nums.length - 1);
-//        System.out.println(Arrays.toString(nums));
-//        String str = "0003320F3298182||01|051440202065|TX09|61973669|882005251708423112|4200000533202005252079547943|1.00|1|SUCCESS|2020-05-25 17:08:47|20200525||0.00|1026100000020";
-//        String[] strings = StringUtils.split(str, "|");
-//        System.out.println(Arrays.toString(strings));
-        // System.out.println(isAnagram(s, t));
-        //System.out.println(rob(nums));
+    public int numIslands(char[][] grid) {
 
-        // System.out.println(partition(s));
-//        //int result = searchInsert(nums, 2);
-//        //List<Integer> result = getRow(3);
-//        int[] result = exchange(nums);
-//        for (int i = 0; i < result.length; i++) {
-//            System.out.println(result[i]);
-//        }
-//        int n = 100;
-//        int result = sumNums(n);
-//        System.out.println(result);
-        //System.out.println(singleNumber(nums));
-//        List<List<Integer>> integerList = permute(nums);
-//        System.out.println(integerList);
-        //int result = lengthOfLastWord1(s);
-//        List<List<String>> listList = groupAnagrams(nums);
-//        System.out.println(listList);
-//        long start = System.currentTimeMillis();
-//        int result = countPrimes(count);
-//        long end = System.currentTimeMillis();
-//        System.out.println("耗时:" + (end - start));
-//        System.out.println(result);
-//        String string = "23484";
-//        int [] ints={0,4,5,7,0,8};
-//        //List<String> str = letterCombinations(string);
-//        //System.out.println("结果" + str);
-//        moveZeroes(ints);
-        // Date date=getYesterday();
-//        String date = "20190802";
-//        SimpleDateFormat sb = new SimpleDateFormat("yyyyMMdd");
-//        try {
-//            Date date1 = sb.parse(date);
-//            System.out.println(date1);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println("启动计数线程");
-//        System.out.println("计数值：" + latch.getCount());
-//        getThread().start();
-//        while (latch.getCount() != 0) {
-//            latch.countDown();
-//            try {
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            System.out.println("计数值：" + latch.getCount());
-//        }
+        if (grid == null || grid.length == 0) {
+            return 0;
+        }
+        int isLands = 0;
+        int row = grid.length;
+        int column = grid[0].length;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                if(grid[i][j]=='1'){
+                    isLands++;
+                    dfs(grid,i,j);
+                }
+            }
+        }
+        return isLands;
     }
+
+    private void dfs(char[][] grid, int row, int column) {
+        int nr = grid.length;
+        int nc = grid[0].length;
+        if (row < 0 || column < 0 || row >= nr || column >= nc || grid[row][column] == '0') {
+            return;
+        }
+        grid[row][column] = '0';
+        dfs(grid, row - 1, column);
+        dfs(grid, row + 1, column);
+        dfs(grid, row, column - 1);
+        dfs(grid, row, column + 1);
+    }
+
+
+//    public static void main(String[] args) {
+//        //  String s = "a";
+//        int[] nums = {1, 2, 3, 1};
+////        int[] arrays = topKFrequent(nums, 2);
+////        String s = "asbnb";
+////        long start = System.currentTimeMillis();
+////        System.out.println(findPeakElement(nums));
+////        long end = System.currentTimeMillis();
+////        System.out.println("耗时" + (end - start));
+//        //  System.out.println(longestPalindrome(s));
+//        // System.out.println(stringList.toString());
+//        //System.out.println(titleToNumber("B"));
+////        Arrays.sort(nums);
+////        System.out.println(nums);
+//        //  String s = "anagram";
+//        // String t = "nagaram";
+//        // bubbleSort(nums);
+////        quickSort(nums, 0, nums.length - 1);
+////        System.out.println(Arrays.toString(nums));
+////        String str = "0003320F3298182||01|051440202065|TX09|61973669|882005251708423112|4200000533202005252079547943|1.00|1|SUCCESS|2020-05-25 17:08:47|20200525||0.00|1026100000020";
+////        String[] strings = StringUtils.split(str, "|");
+////        System.out.println(Arrays.toString(strings));
+//        // System.out.println(isAnagram(s, t));
+//        //System.out.println(rob(nums));
+//
+//        // System.out.println(partition(s));
+////        //int result = searchInsert(nums, 2);
+////        //List<Integer> result = getRow(3);
+////        int[] result = exchange(nums);
+////        for (int i = 0; i < result.length; i++) {
+////            System.out.println(result[i]);
+////        }
+////        int n = 100;
+////        int result = sumNums(n);
+////        System.out.println(result);
+//        //System.out.println(singleNumber(nums));
+////        List<List<Integer>> integerList = permute(nums);
+////        System.out.println(integerList);
+//        //int result = lengthOfLastWord1(s);
+////        List<List<String>> listList = groupAnagrams(nums);
+////        System.out.println(listList);
+////        long start = System.currentTimeMillis();
+////        int result = countPrimes(count);
+////        long end = System.currentTimeMillis();
+////        System.out.println("耗时:" + (end - start));
+////        System.out.println(result);
+////        String string = "23484";
+////        int [] ints={0,4,5,7,0,8};
+////        //List<String> str = letterCombinations(string);
+////        //System.out.println("结果" + str);
+////        moveZeroes(ints);
+//        // Date date=getYesterday();
+////        String date = "20190802";
+////        SimpleDateFormat sb = new SimpleDateFormat("yyyyMMdd");
+////        try {
+////            Date date1 = sb.parse(date);
+////            System.out.println(date1);
+////        } catch (ParseException e) {
+////            e.printStackTrace();
+////        }
+////        System.out.println("启动计数线程");
+////        System.out.println("计数值：" + latch.getCount());
+////        getThread().start();
+////        while (latch.getCount() != 0) {
+////            latch.countDown();
+////            try {
+////                Thread.sleep(1000);
+////            } catch (InterruptedException e) {
+////                e.printStackTrace();
+////            }
+////            System.out.println("计数值：" + latch.getCount());
+////        }
+//    }
 
 
 }
