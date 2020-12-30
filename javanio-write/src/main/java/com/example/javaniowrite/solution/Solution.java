@@ -3178,23 +3178,31 @@ public class Solution {
     }
 
 
+    /**
+     * 深度遍历优先计算岛屿数量
+     * 我们可以将二维网格看成一个无向图，竖直或水平相邻的 11之间有边相连。
+     * 为了求出岛屿的数量，我们可以扫描整个二维网格。如果一个位置为 1，则以其为起始节点开始进行深度优先搜索。在深度优先搜索的过程中，每个搜索到的 1都会被重新标记为 0。
+     * 最终岛屿的数量就是我们进行深度优先搜索的次数
+     * @param grid
+     * @return
+     */
     public int numIslands(char[][] grid) {
 
         if (grid == null || grid.length == 0) {
             return 0;
         }
-        int isLands = 0;
-        int row = grid.length;
-        int column = grid[0].length;
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < column; j++) {
-                if(grid[i][j]=='1'){
-                    isLands++;
-                    dfs(grid,i,j);
+        int r = grid.length;
+        int c = grid[0].length;
+        int numIslands = 0;
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                if (grid[i][j] == '1') {
+                    numIslands++;
+                    dfs(grid, i, j);
                 }
             }
         }
-        return isLands;
+        return numIslands;
     }
 
     private void dfs(char[][] grid, int row, int column) {
