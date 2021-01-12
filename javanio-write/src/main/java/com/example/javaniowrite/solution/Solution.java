@@ -5,7 +5,10 @@ import javafx.util.Pair;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @author zhaoliancan
@@ -3308,29 +3311,71 @@ public class Solution {
     /**
      * 兑换零钱
      * // 动态规划（自下而上）
+     *
+     F(i)	最小硬币数量
+     F(0)	0 //金额为0不能由硬币组成
+     F(1)	1 //F(1)=min(F(1-1),F(1-2),F(1-5))+1=1F(1)=min(F(1−1),F(1−2),F(1−5))+1=1
+     F(2)	1 //F(2)=min(F(2-1),F(2-2),F(2-5))+1=1F(2)=min(F(2−1),F(2−2),F(2−5))+1=1
+     F(3)	2 //F(3)=min(F(3-1),F(3-2),F(3-5))+1=2F(3)=min(F(3−1),F(3−2),F(3−5))+1=2
+     F(4)	2 //F(4)=min(F(4-1),F(4-2),F(4-5))+1=2F(4)=min(F(4−1),F(4−2),F(4−5))+1=2
+     ...	...
+     F(11)	3 //F(11)=min(F(11-1),F(11-2),F(11-5))+1=3F(11)=min(F(11−1),F(11−2),F(11−5))+1=3
      * @param coins
      * @param amount
      * @return
      */
     public int coinChange(int[] coins, int amount) {
-        int max = amount+1;
-        int[] dp = new int[amount+1];
+
+        int max = amount + 1;
+        int[] dp = new int[max];
         Arrays.fill(dp, max);
         dp[0] = 0;
         for (int i = 1; i <= amount; i++) {
             for (int j = 0; j < coins.length; j++) {
                 if (coins[j] <= i) {
-                    dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
+                    dp[i] = Math.min(dp[i], dp[i- coins[j]] + 1);
                 }
             }
         }
         return dp[amount] > amount ? -1 : dp[amount];
     }
 
-    public static void main(String[] args) {
-        String[] strings = {"i", "have", "an", "apple", "he", "have", "a", "pen"};
-        WordsFrequency wordsFrequency = new WordsFrequency(strings);
-        System.out.println(wordsFrequency.get("have"));
+//    public static void main(String[] args) {
+//        String[] strings = {"i", "have", "an", "apple", "he", "have", "a", "pen"};
+//        WordsFrequency wordsFrequency = new WordsFrequency(strings);
+//        System.out.println(wordsFrequency.get("have"));
+    // }
+
+//    @SneakyThrows
+//    public static  void main(String[] args) {
+//        ClassPool classPool = ClassPool.getDefault();
+//        CtClass ctClass = classPool.makeClass("HelloWorld");
+//        CtMethod ctMethod = CtNewMethod.make(" public static void test() {\n" +
+//                "        System.out.println(\"Hello World\");\n" +
+//                "    }", ctClass);
+//        ctClass.addMethod(ctMethod);
+//        Class aClass = ctClass.toClass();
+//        Object object = aClass.newInstance();
+//        Method m = aClass.getDeclaredMethod("test", null);
+//        m.invoke(object, null);
+//    }
+
+    public static void main(String[] args) throws InterruptedException {
+        BlockingQueue<String> queue = new LinkedBlockingQueue(500000);
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            queue.put(String.valueOf(i));
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("耗时" + (end - start));
+
+        BlockingQueue<String> queue1 = new ArrayBlockingQueue<>(500000);
+        long start1 = System.currentTimeMillis();
+        for (int i = 0; i < 1000000; i++) {
+            queue1.put(String.valueOf(i));
+        }
+        long end1 = System.currentTimeMillis();
+        System.out.println("耗时" + (end1 - start1));
     }
 
 
