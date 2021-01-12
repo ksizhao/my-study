@@ -3311,33 +3311,79 @@ public class Solution {
     /**
      * 兑换零钱
      * // 动态规划（自下而上）
+     * coins = [1, 2, 5], amount = 11
+     * F(i)	最小硬币数量
+     * F(0)	0 //金额为0不能由硬币组成
+     * F(1)	1 //F(1)=min(F(1-1),F(1-2),F(1-5))+1=1F(1)=min(F(1−1),F(1−2),F(1−5))+1=1
+     * F(2)	1 //F(2)=min(F(2-1),F(2-2),F(2-5))+1=1F(2)=min(F(2−1),F(2−2),F(2−5))+1=1
+     * F(3)	2 //F(3)=min(F(3-1),F(3-2),F(3-5))+1=2F(3)=min(F(3−1),F(3−2),F(3−5))+1=2
+     * F(4)	2 //F(4)=min(F(4-1),F(4-2),F(4-5))+1=2F(4)=min(F(4−1),F(4−2),F(4−5))+1=2
+     * ...	...
+     * F(11)	3 //F(11)=min(F(11-1),F(11-2),F(11-5))+1=3F(11)=min(F(11−1),F(11−2),F(11−5))+1=3
      *
-     F(i)	最小硬币数量
-     F(0)	0 //金额为0不能由硬币组成
-     F(1)	1 //F(1)=min(F(1-1),F(1-2),F(1-5))+1=1F(1)=min(F(1−1),F(1−2),F(1−5))+1=1
-     F(2)	1 //F(2)=min(F(2-1),F(2-2),F(2-5))+1=1F(2)=min(F(2−1),F(2−2),F(2−5))+1=1
-     F(3)	2 //F(3)=min(F(3-1),F(3-2),F(3-5))+1=2F(3)=min(F(3−1),F(3−2),F(3−5))+1=2
-     F(4)	2 //F(4)=min(F(4-1),F(4-2),F(4-5))+1=2F(4)=min(F(4−1),F(4−2),F(4−5))+1=2
-     ...	...
-     F(11)	3 //F(11)=min(F(11-1),F(11-2),F(11-5))+1=3F(11)=min(F(11−1),F(11−2),F(11−5))+1=3
      * @param coins
      * @param amount
      * @return
      */
     public int coinChange(int[] coins, int amount) {
-
         int max = amount + 1;
         int[] dp = new int[max];
         Arrays.fill(dp, max);
         dp[0] = 0;
         for (int i = 1; i <= amount; i++) {
             for (int j = 0; j < coins.length; j++) {
-                if (coins[j] <= i) {
-                    dp[i] = Math.min(dp[i], dp[i- coins[j]] + 1);
+                if (coins[j] < i) {
+                    dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
                 }
             }
         }
         return dp[amount] > amount ? -1 : dp[amount];
+    }
+
+    int m,n;
+    public void solve(char[][] board) {
+        int m = board.length;
+        if(m==0){
+            return;
+        }
+        int n = board[0].length;
+        // 遍历列
+        for (int i = 0; i < m; i++) {
+            dfs1(board, i, 0);
+            dfs1(board, i, n - 1);
+        }
+        // 遍历行
+        for (int i = 1; i < n - 1; i++) {
+            dfs1(board, 0, i);
+            dfs1(board, m - 1, i);
+        }
+        // 任何边界上的 O 都不会被填充为 X
+        // 替换对于每一个边界上的 O，我们以它为起点，标记所有与它直接或间接相连的字母 O；
+        //最后我们遍历这个矩阵，对于每一个字母：
+        //如果该字母被标记过，则该字母为没有被字母 X 包围的字母 O，我们将其还原为字母 O；
+        //如果该字母没有被标记过，则该字母为被字母 X 包围的字母 O，我们将其修改为字母 X。
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 'A') {
+                    board[i][j] = 'O';
+                } else if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                }
+            }
+        }
+    }
+
+    private void dfs1(char[][] board, int x, int y) {
+        int nr = board.length;
+        int nc = board[0].length;
+        if (x < 0 || x >= nr || y < 0 || y >= nc || board[x][y] != 'O') {
+            return;
+        }
+        board[x][y] = 'A';
+        dfs1(board, x +1, y);
+        dfs1(board, x - 1, y);
+        dfs1(board, x, y + 1);
+        dfs1(board, x, y - 1);
     }
 
 //    public static void main(String[] args) {
