@@ -3340,30 +3340,39 @@ public class Solution {
         return dp[amount] > amount ? -1 : dp[amount];
     }
 
-    int m,n;
+
+    /**
+     * 被围绕的区域
+     * 深度搜索优先
+     * 任何边界上的 O 都不会被填充为 X
+     * 对于每一个边界上的 O，我们以它为起点，标记所有与它直接或间接相连的字母 O；
+     * 最后我们遍历这个矩阵，对于每一个字母：
+     * 如果该字母被标记过，则该字母为没有被字母 X 包围的字母 O，我们将其还原为字母 O；
+     * 如果该字母没有被标记过，则该字母为被字母 X 包围的字母 O，我们将其修改为字母 X。
+     *
+     * @param board
+     */
     public void solve(char[][] board) {
-        int m = board.length;
-        if(m==0){
+
+        int row = board.length;
+        if (row == 0) {
             return;
         }
-        int n = board[0].length;
+        int column = board[0].length;
         // 遍历列
-        for (int i = 0; i < m; i++) {
+        for (int i = 0; i < row; i++) {
             dfs1(board, i, 0);
-            dfs1(board, i, n - 1);
+            dfs1(board, i, column - 1);
         }
         // 遍历行
-        for (int i = 1; i < n - 1; i++) {
+        for (int i = 1; i < column; i++) {
             dfs1(board, 0, i);
-            dfs1(board, m - 1, i);
+            dfs1(board, row - 1, i);
         }
-        // 任何边界上的 O 都不会被填充为 X
-        // 替换对于每一个边界上的 O，我们以它为起点，标记所有与它直接或间接相连的字母 O；
-        //最后我们遍历这个矩阵，对于每一个字母：
-        //如果该字母被标记过，则该字母为没有被字母 X 包围的字母 O，我们将其还原为字母 O；
-        //如果该字母没有被标记过，则该字母为被字母 X 包围的字母 O，我们将其修改为字母 X。
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
+        //  如果该字母被标记过，则该字母为没有被字母 X 包围的字母 O，我们将其还原为字母 O；
+        //  如果该字母没有被标记过，则该字母为被字母 X 包围的字母 O，我们将其修改为字母 X。
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
                 if (board[i][j] == 'A') {
                     board[i][j] = 'O';
                 } else if (board[i][j] == 'O') {
@@ -3380,10 +3389,37 @@ public class Solution {
             return;
         }
         board[x][y] = 'A';
-        dfs1(board, x +1, y);
         dfs1(board, x - 1, y);
-        dfs1(board, x, y + 1);
+        dfs1(board, x + 1, y);
         dfs1(board, x, y - 1);
+        dfs1(board, x, y + 1);
+    }
+
+    /**
+     * 动态规划，最长递增子序列
+     * 定义 dp[i]dp[i] 为考虑前 ii 个元素，以第 ii 个数字结尾的最长上升子序列的长度，
+     * 状态转移方程 dp[i]=max(dp[i],dp[j]+1),其中0≤j<i且num[j]<num[i]
+     * @param nums
+     * @return
+     */
+    public int lengthOfLIS(int[] nums) {
+        if(nums.length==0){
+            return 0;
+        }
+        int[] dp = new int[nums.length + 1];
+        dp[0] = 1;
+        // 递增子序列长度
+        int maxans = 1;
+        for (int i = 1; i < nums.length; i++) {
+            dp[i] = 1;
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            maxans = Math.max(dp[i], maxans);
+        }
+        return maxans;
     }
 
 //    public static void main(String[] args) {
