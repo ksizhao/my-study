@@ -3397,20 +3397,19 @@ public class Solution {
 
     /**
      * 动态规划，最长递增子序列
-     * 定义 dp[i]dp[i] 为考虑前 ii 个元素，以第 ii 个数字结尾的最长上升子序列的长度，
-     * 状态转移方程 dp[i]=max(dp[i],dp[j]+1),其中0≤j<i且num[j]<num[i]
+     * 定义 dp[i]，dp[i] 为考虑前 i 个元素，以第 i 个数字结尾的最长上升子序列的长度，
+     * 在计算 dp[i]dp[i] 之前，我们已经计算出 dp[0…i−1] 的值,状态转移方程 dp[i]=max(dp[i],dp[j]+1),其中0≤j<i且num[j]<num[i]
+     *
      * @param nums
      * @return
      */
     public int lengthOfLIS(int[] nums) {
-
-        if(nums.length==0){
+        if (nums.length == 0) {
             return 0;
         }
-        int[] dp = new int[nums.length + 1];
+        int[] dp = new int[nums.length];
+        int maxStr = 1;
         dp[0] = 1;
-        // 递增子序列长度
-        int maxans = 1;
         for (int i = 1; i < nums.length; i++) {
             dp[i] = 1;
             for (int j = 0; j < i; j++) {
@@ -3418,9 +3417,10 @@ public class Solution {
                     dp[i] = Math.max(dp[i], dp[j] + 1);
                 }
             }
-            maxans = Math.max(dp[i], maxans);
+            maxStr = Math.max(dp[i], maxStr);
         }
-        return maxans;
+        return maxStr;
+
     }
 
 //    public static void main(String[] args) {
