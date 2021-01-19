@@ -3423,6 +3423,96 @@ public class Solution {
 
     }
 
+
+    class Trie {
+
+        /**
+         * Trie 树是一个有根的树，其结点具有以下字段：。
+         *
+         * 最多 R 个指向子结点的链接，其中每个链接对应字母表数据集中的一个字母。
+         * 本文中假定 RR 为 26，小写拉丁字母的数量。
+         * 布尔字段，以指定节点是对应键的结尾还是只是键前缀。
+         */
+        class TrieNode {
+
+            private final int R = 26;
+            private TrieNode[] links;
+            private boolean isEnd;
+
+            public TrieNode() {
+                this.links = new TrieNode[R];
+            }
+
+            public TrieNode get(char word) {
+                return links[word - 'a'];
+            }
+
+            public boolean containsKey(char ch) {
+                return links[ch - 'a'] != null;
+            }
+
+            public void put(char ch, TrieNode trieNode) {
+                links[ch - 'a'] = trieNode;
+            }
+
+            public boolean isEnd() {
+                return isEnd;
+            }
+
+            public void setEnd() {
+                isEnd = true;
+            }
+        }
+
+        private TrieNode root;
+
+        public Trie() {
+            root = new TrieNode();
+        }
+
+        public void insert(String word) {
+            TrieNode node = root;
+            for (int i = 0; i < word.length(); i++) {
+                char currChar = word.charAt(i);
+                if (!node.containsKey(currChar)) {
+                    node.put(currChar, new TrieNode());
+                }
+                node = node.get(currChar);
+            }
+            node.setEnd();
+        }
+
+        public boolean search(String word) {
+            TrieNode trieNode = searchPrefix(word);
+            return trieNode != null && trieNode.isEnd();
+        }
+
+        private TrieNode searchPrefix(String word) {
+            TrieNode node = root;
+            for (int i = 0; i < word.length(); i++) {
+                char currChar = word.charAt(i);
+                if (node.containsKey(currChar)) {
+                    node = node.get(currChar);
+                } else {
+                    return null;
+                }
+            }
+            return node;
+        }
+
+
+        /**
+         * Returns if there is any word in the trie that starts with the given prefix.
+         */
+        public boolean startsWith(String prefix) {
+            TrieNode trieNode = searchPrefix(prefix);
+            return trieNode != null;
+        }
+
+
+    }
+
+
 //    public static void main(String[] args) {
 //        String[] strings = {"i", "have", "an", "apple", "he", "have", "a", "pen"};
 //        WordsFrequency wordsFrequency = new WordsFrequency(strings);
