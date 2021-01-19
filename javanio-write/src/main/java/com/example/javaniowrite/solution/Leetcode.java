@@ -29,7 +29,7 @@ public class Leetcode {
 
 
     /**
-     * 复制带随机指针的节点
+     * 回溯法，复制带随机指针的节点
      * @param head
      * @return
      */
