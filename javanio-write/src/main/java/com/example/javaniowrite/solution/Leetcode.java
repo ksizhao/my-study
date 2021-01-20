@@ -50,35 +50,36 @@ public class Leetcode {
     }
 
     /**
-     *  二分法搜索旋转排序数组
+     * 二分法搜索旋转排序数组
+     *
      * @param nums
      * @param target
      * @return
      */
     public int search(int[] nums, int target) {
-        if (nums.length == 0) {
+        int length = nums.length;
+        if (length == 0) {
             return -1;
         }
-        if (nums.length == 1) {
-            return target == nums[0] ? 0 : -1;
+        if (length == 1) {
+            return nums[0] == target ? 0 : -1;
         }
-
-        int left = 0, right = nums.length - 1;
+        int left = 0, right = length - 1;
         while (left <= right) {
             int mid = (right + left) / 2;
-            if (target == nums[mid]) {
+            if (nums[mid] == target) {
                 return mid;
             }
-            // 左边有序
             if (nums[0] <= nums[mid]) {
+                // 目标值在中间值左边
                 if (nums[0] <= target && target < nums[mid]) {
                     right = mid - 1;
                 } else {
                     left = mid + 1;
                 }
             } else {
-                 // 右边有序
-                if (target > nums[mid] && target <= nums[right]) {
+                // 目标值在中间值右边
+                if (target>nums[mid]  && target <= nums[right]) {
                     left = mid + 1;
                 } else {
                     right = mid - 1;
