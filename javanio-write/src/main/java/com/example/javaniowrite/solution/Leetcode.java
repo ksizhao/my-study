@@ -1,6 +1,8 @@
 package com.example.javaniowrite.solution;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author zhaolc
@@ -79,7 +81,7 @@ public class Leetcode {
                 }
             } else {
                 // 目标值在中间值右边
-                if (target>nums[mid]  && target <= nums[right]) {
+                if (target > nums[mid] && target <= nums[right]) {
                     left = mid + 1;
                 } else {
                     right = mid - 1;
@@ -87,5 +89,45 @@ public class Leetcode {
             }
         }
         return -1;
+    }
+
+    /**
+     * 螺旋矩阵，按层模拟
+     *
+     * @param matrix
+     * @return
+     */
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> integerList = new ArrayList<>();
+        if (matrix == null || matrix[0].length == 0) {
+            return integerList;
+        }
+        int rows = matrix.length, columns = matrix[0].length;
+        int left = 0, right = columns - 1, top = 0, bottom = rows - 1;
+        while (left <= right && top <= bottom) {
+            // 从左到右
+            for (int column = left; column <= right; column++) {
+                integerList.add(matrix[top][column]);
+            }
+            // 从上到下，往下递进一层
+            for (int row = top+1; row <= bottom; row++) {
+                integerList.add(matrix[row][right]);
+            }
+            if (left < right && top < bottom) {
+                // 从右到左遍历下侧元素,注意往内递进一层
+                for (int column = right-1; column > left; column--) {
+                    integerList.add(matrix[bottom][column]);
+                }
+                // 从下到上遍历左侧元素
+                for (int row = bottom; row > top; row--) {
+                    integerList.add(matrix[row][left]);
+                }
+            }
+            left++;
+            right--;
+            top++;
+            bottom--;
+        }
+        return integerList;
     }
 }
