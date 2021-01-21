@@ -130,4 +130,34 @@ public class Leetcode {
         }
         return integerList;
     }
+
+    public int[][] generateMatrix(int n) {
+        int[][] matrix =new int[n][n];
+        int left = 0, right = n - 1, top = 0, bottom = n - 1;
+        int num=1,tar=n*n;
+        while (num<=tar){
+            // 从左往右
+            for (int column = left; column <= right; column++) {
+                matrix[top][column]=num++;
+            }
+            top++;
+            // 从上到下
+            for (int row = top; row <= bottom; row++) {
+                matrix[row][right]=num++;
+            }
+            right--;
+            // 从右到左遍历下侧元素,注意往内递进一层
+            for (int column = right; column > left; column--) {
+                matrix[bottom][column]=num++;
+            }
+            bottom--;
+            // 从下到上遍历左侧元素
+            for (int row = bottom; row > top; row--) {
+                matrix[row][left]=num++;
+            }
+            left++;
+            //
+        }
+        return matrix;
+    }
 }
