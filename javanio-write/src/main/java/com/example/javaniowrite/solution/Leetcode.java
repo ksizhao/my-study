@@ -1,8 +1,6 @@
 package com.example.javaniowrite.solution;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author zhaolc
@@ -110,12 +108,12 @@ public class Leetcode {
                 integerList.add(matrix[top][column]);
             }
             // 从上到下，往下递进一层
-            for (int row = top+1; row <= bottom; row++) {
+            for (int row = top + 1; row <= bottom; row++) {
                 integerList.add(matrix[row][right]);
             }
             if (left < right && top < bottom) {
                 // 从右到左遍历下侧元素,注意往内递进一层
-                for (int column = right-1; column > left; column--) {
+                for (int column = right - 1; column > left; column--) {
                     integerList.add(matrix[bottom][column]);
                 }
                 // 从下到上遍历左侧元素
@@ -132,32 +130,78 @@ public class Leetcode {
     }
 
     public int[][] generateMatrix(int n) {
-        int[][] matrix =new int[n][n];
+        int[][] matrix = new int[n][n];
         int left = 0, right = n - 1, top = 0, bottom = n - 1;
-        int num=1,tar=n*n;
-        while (num<=tar){
+        int num = 1, tar = n * n;
+        while (num <= tar) {
             // 从左往右
             for (int column = left; column <= right; column++) {
-                matrix[top][column]=num++;
+                matrix[top][column] = num++;
             }
             top++;
             // 从上到下
             for (int row = top; row <= bottom; row++) {
-                matrix[row][right]=num++;
+                matrix[row][right] = num++;
             }
             right--;
             // 从右到左遍历下侧元素,注意往内递进一层
             for (int column = right; column > left; column--) {
-                matrix[bottom][column]=num++;
+                matrix[bottom][column] = num++;
             }
             bottom--;
             // 从下到上遍历左侧元素
             for (int row = bottom; row > top; row--) {
-                matrix[row][left]=num++;
+                matrix[row][left] = num++;
             }
             left++;
             //
         }
         return matrix;
+    }
+
+    /**
+     * 排序 + 双指针求三数之和
+     *
+     * @param nums
+     * @return
+     */
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> integerList = new LinkedList<>();
+        if (nums == null || nums.length == 0) {
+            return integerList;
+        }
+        Arrays.sort(nums);
+        int length = nums.length;
+        // 枚举 a
+        for (int first = 0; first < length; first++) {
+            // 第一次循环
+            if (first > 0 && nums[first] == nums[first - 1]) {
+                continue;
+            }
+            int third = length - 1;
+            // 枚举 b
+            for (int second = first + 1; second < length; second++) {
+                // 需要和上一次枚举的数不相同
+                if (second > first + 1 && nums[second] == nums[second - 1]) {
+                    continue;
+                }
+                // 需要保证 b 的指针在 c 的指针的左侧
+                while (second < third && nums[first] + nums[second] + nums[third] > 0) {
+                    third = third - 1;
+                }
+                //不会有满足 a+b+c=0 并且 b<c 的 c
+                if (second == third) {
+                    break;
+                }
+                if (nums[first] + nums[second] + nums[third] == 0) {
+                    List<Integer> list = new ArrayList<Integer>();
+                    list.add(nums[first]);
+                    list.add(nums[second]);
+                    list.add(nums[third]);
+                    integerList.add(list);
+                }
+            }
+        }
+        return integerList;
     }
 }
