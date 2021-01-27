@@ -172,16 +172,13 @@ public class Leetcode {
         }
         Arrays.sort(nums);
         int length = nums.length;
-        // 枚举 a
         for (int first = 0; first < length; first++) {
             // 第一次循环
             if (first > 0 && nums[first] == nums[first - 1]) {
                 continue;
             }
             int third = length - 1;
-            // 枚举 b
             for (int second = first + 1; second < length; second++) {
-                // 需要和上一次枚举的数不相同
                 if (second > first + 1 && nums[second] == nums[second - 1]) {
                     continue;
                 }
@@ -189,7 +186,6 @@ public class Leetcode {
                 while (second < third && nums[first] + nums[second] + nums[third] > 0) {
                     third = third - 1;
                 }
-                //不会有满足 a+b+c=0 并且 b<c 的 c
                 if (second == third) {
                     break;
                 }
@@ -204,4 +200,34 @@ public class Leetcode {
         }
         return integerList;
     }
+
+    /**
+     * 使用双指针求解接雨水
+     * @param height
+     * @return
+     */
+    public int trap(int[] height) {
+        int ans = 0;
+        int leftMax = 0, rightMax = 0;
+        int left = 0, right = height.length - 1;
+        while (left < right) {
+            if (height[left] <= height[right]) {
+                if (height[left] >= leftMax) {
+                    leftMax = height[left];
+                } else {
+                    ans += (leftMax - height[left]);
+                }
+                left++;
+            } else {
+                if (height[right] >= rightMax) {
+                    rightMax = height[right];
+                } else {
+                    ans += (rightMax - height[right]);
+                }
+                right--;
+            }
+        }
+        return ans;
+    }
+
 }
