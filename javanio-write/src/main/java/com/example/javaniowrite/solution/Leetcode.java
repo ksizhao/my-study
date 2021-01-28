@@ -203,6 +203,7 @@ public class Leetcode {
 
     /**
      * 使用双指针求解接雨水
+     *
      * @param height
      * @return
      */
@@ -229,5 +230,51 @@ public class Leetcode {
         }
         return ans;
     }
+
+    /**
+     * hash表求缺失的第一个正数
+     * @param nums
+     * @return
+     */
+    public int firstMissingPositive(int[] nums) {
+
+        int n = nums.length;
+//        for (int i = 0; i < nums.length; i++) {
+//            if (nums[i] <= 0) {
+//                nums[i] = n + 1;
+//            }
+//        }
+//        for (int i = 0; i < nums.length; i++) {
+//            int num = Math.abs(nums[i]);
+//            if (num <= n) {
+//                nums[num - 1] = -Math.abs(nums[num - 1]);
+//            }
+//        }
+//        for (int i = 0; i < nums.length; i++) {
+//            if (nums[i] > 0) {
+//                return i + 1;
+//            }
+//        }
+//        return n + 1;
+        for (int i = 0; i < n; i++) {
+            while (nums[i] > 0 && nums[i] <= n && nums[nums[i - 1]] != nums[i]) {
+                swap(nums, nums[i - 1], i);
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            if (nums[i] != i + 1) {
+                return i + 1;
+            }
+        }
+        return n + 1;
+
+    }
+
+    private void swap(int[] nums, int a, int b) {
+        int temp = nums[a];
+        nums[a] = nums[b];
+        nums[b] = temp;
+    }
+
 
 }
