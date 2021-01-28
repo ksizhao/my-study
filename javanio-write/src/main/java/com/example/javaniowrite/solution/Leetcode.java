@@ -233,32 +233,16 @@ public class Leetcode {
 
     /**
      * hash表求缺失的第一个正数
+     * nums[i]=i+1 [3,4,-1,1] --> [1,-1,3,4]
      * @param nums
      * @return
      */
     public int firstMissingPositive(int[] nums) {
 
         int n = nums.length;
-//        for (int i = 0; i < nums.length; i++) {
-//            if (nums[i] <= 0) {
-//                nums[i] = n + 1;
-//            }
-//        }
-//        for (int i = 0; i < nums.length; i++) {
-//            int num = Math.abs(nums[i]);
-//            if (num <= n) {
-//                nums[num - 1] = -Math.abs(nums[num - 1]);
-//            }
-//        }
-//        for (int i = 0; i < nums.length; i++) {
-//            if (nums[i] > 0) {
-//                return i + 1;
-//            }
-//        }
-//        return n + 1;
         for (int i = 0; i < n; i++) {
-            while (nums[i] > 0 && nums[i] <= n && nums[nums[i - 1]] != nums[i]) {
-                swap(nums, nums[i - 1], i);
+            while (nums[i] > 0 && nums[i] <= n && nums[nums[i] - 1] != nums[i]) {
+                swap(nums, nums[i]-1, i);
             }
         }
         for (int i = 0; i < n; i++) {
