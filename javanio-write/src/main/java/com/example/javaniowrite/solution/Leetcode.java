@@ -234,6 +234,7 @@ public class Leetcode {
     /**
      * hash表求缺失的第一个正数
      * nums[i]=i+1 [3,4,-1,1] --> [1,-1,3,4]
+     *
      * @param nums
      * @return
      */
@@ -242,7 +243,7 @@ public class Leetcode {
         int n = nums.length;
         for (int i = 0; i < n; i++) {
             while (nums[i] > 0 && nums[i] <= n && nums[nums[i] - 1] != nums[i]) {
-                swap(nums, nums[i]-1, i);
+                swap(nums, nums[i] - 1, i);
             }
         }
         for (int i = 0; i < n; i++) {
@@ -258,6 +259,22 @@ public class Leetcode {
         int temp = nums[a];
         nums[a] = nums[b];
         nums[b] = temp;
+    }
+
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> stringSet = new HashSet<>(wordDict);
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        for (int i = 1; i <= s.length(); i++) {
+            for (int j = 0; j < i; j++) {
+                // 前一個字符合法
+                if (dp[j] && stringSet.contains(s.substring(j, i))) {
+                    dp[i] = true;
+                }
+            }
+        }
+        return dp[s.length()];
     }
 
 

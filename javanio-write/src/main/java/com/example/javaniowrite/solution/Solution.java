@@ -1419,28 +1419,26 @@ public class Solution {
     }
 
     /**
-     * 验证二叉搜索树
+     * 中序遍历 验证二叉搜索树
      *
      * @param root
      * @return
      */
     public boolean isValidBST(TreeNode root) {
-        Stack<TreeNode> stack = new Stack();
-        double inorder = -Double.MAX_VALUE;
-
+        Stack<TreeNode> stack = new Stack<>();
+        int val = -Integer.MAX_VALUE;
         while (!stack.isEmpty() || root != null) {
+            // 遍历左子树
             while (root != null) {
                 stack.push(root);
                 root = root.left;
             }
             root = stack.pop();
-            // If next element in inorder traversal
-            // is smaller than the previous one
-            // that's not BST.
-            if (root.val <= inorder) {
+            if (root.val <= val) {
                 return false;
             }
-            inorder = root.val;
+            // 遍历右子树
+            val = root.val;
             root = root.right;
         }
         return true;
@@ -2852,6 +2850,36 @@ public class Solution {
     }
 
     /**
+     * 栈求有效的括号
+     * @param s
+     * @return
+     */
+    public boolean isValid(String s) {
+        int length = s.length();
+        if (length % 2 != 0) {
+            return false;
+        }
+        Map<Character, Character> characterMap = new HashMap<>();
+        characterMap.put(')', '(');
+        characterMap.put(']', '[');
+        characterMap.put('}', '{');
+        Stack<Character> characterStack = new Stack<>();
+        for (int i = 0; i < length; i++) {
+            char key = s.charAt(i);
+            if (characterMap.containsKey(key)) {
+                // 栈为空，使用 '#'代替
+                Character topElement = characterStack.isEmpty() ? '#' : characterStack.pop();
+                if (!topElement.equals(characterMap.get(key))) {
+                    return false;
+                }
+            } else {
+                characterStack.push(key);
+            }
+        }
+        return characterStack.isEmpty();
+    }
+
+    /**
      * 矩阵置0
      *
      * @param matrix
@@ -3428,7 +3456,7 @@ public class Solution {
 
         /**
          * Trie 树是一个有根的树，其结点具有以下字段：。
-         *
+         * <p>
          * 最多 R 个指向子结点的链接，其中每个链接对应字母表数据集中的一个字母。
          * 本文中假定 RR 为 26，小写拉丁字母的数量。
          * 布尔字段，以指定节点是对应键的结尾还是只是键前缀。
